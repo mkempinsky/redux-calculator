@@ -8,7 +8,6 @@ class Calculator extends Component {
             <main className="react-calculator">
                 <Display />
                 <ControlPanel />
-                this is a test
                 <Digits />
                 <Operators />
                 <History />
