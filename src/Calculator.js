@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './Calculator.css';
 import EventEmitter from 'wolfy87-eventemitter';
 
@@ -8,11 +8,12 @@ class Calculator extends Component {
             <main className="react-calculator">
                 <Display />
                 <ControlPanel />
+                this is a test
                 <Digits />
                 <Operators />
                 <History />
             </main>
-        )
+        );
     }
 }
 
@@ -29,18 +30,23 @@ let store = {
     }
 };
 
-
 class Display extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { text: this.props.text || '0' };
+        this.state = {text: this.props.text || '0'};
         this.updateDisplay = this.updateDisplay.bind(this);
         this.onClickHandler = this.onClickHandler.bind(this);
     }
 
     updateDisplay(newStr) {
-        return this.setState({ text: newStr.toString().split(' ').reverse().join(' ') });
+        return this.setState({
+            text: newStr
+                .toString()
+                .split(' ')
+                .reverse()
+                .join(' ')
+        });
     }
 
     componentWillMount() {
@@ -54,7 +60,11 @@ class Display extends Component {
     }
 
     render() {
-        return <div className="display" onClick={this.onClickHandler}>{this.state.text}</div>
+        return (
+            <div className="display" onClick={this.onClickHandler}>
+                {this.state.text}
+            </div>
+        );
     }
 }
 
@@ -69,19 +79,31 @@ class ControlPanel extends Component {
 
     removeOneChar() {
         const curExpression = String(store.curExpression);
-        const newExpWithRemovedChar = curExpression.toString().trim().substring(0, (curExpression.length - 1));
+        const newExpWithRemovedChar = curExpression
+            .toString()
+            .trim()
+            .substring(0, curExpression.length - 1);
 
-        return store.newExpression = newExpWithRemovedChar === '' ? 0 : newExpWithRemovedChar;
+        return (store.newExpression =
+            newExpWithRemovedChar === '' ? 0 : newExpWithRemovedChar);
     }
 
     render() {
         return (
             <section className="buttons--controls">
-                <Button buttonClass="control" text="&larr;" clickHandler={this.removeOneChar}/>
-                <Button buttonClass="control" text="c" clickHandler={this.clearDisplay}/>
-                <Button buttonClass="control" text="history" clickHandler={this.showHistory}/>
+                <Button
+                    buttonClass="control"
+                    text="&larr;"
+                    clickHandler={this.removeOneChar}
+                />
+                <Button buttonClass="control" text="c" clickHandler={this.clearDisplay} />
+                <Button
+                    buttonClass="control"
+                    text="history"
+                    clickHandler={this.showHistory}
+                />
             </section>
-        )
+        );
     }
 }
 
@@ -100,37 +122,39 @@ class Operators extends Component {
         try {
             store.newExpression = calcFunc(store.curExpression);
         } catch (e) {
-            console.error("Error: Incorrect Expression of digits & operators :(")
+            console.error('Error: Incorrect Expression of digits & operators :(');
         }
     }
 
     render() {
         return (
             <section className="buttons--operators">
-                {["+", "-", "*", "/"]
-                    .map((op, i) => (
-                        <Button key={i} text={op} clickHandler={this.opHandler}/>)
-                    )}
-                <Button text="=" clickHandler={this.calculateExpression}/>
+                {['+', '-', '*', '/'].map((op, i) => (
+                    <Button key={i} text={op} clickHandler={this.opHandler} />
+                ))}
+                <Button text="=" clickHandler={this.calculateExpression} />
             </section>
-        )
+        );
     }
 }
 
 class Digits extends Component {
     digitClickHandler(num) {
         if (!store.curExpression) {
-            return store.newExpression = num;
+            return (store.newExpression = num);
         }
 
-        return store.newExpression = `${store.curExpression}${num}`;
+        return (store.newExpression = `${store.curExpression}${num}`);
     }
 
     render() {
-        return <section className="buttons--digits">
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-                .map(nr => <Button key={nr} text={nr} clickHandler={this.digitClickHandler}/>)}
-        </section>
+        return (
+            <section className="buttons--digits">
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map(nr => (
+                    <Button key={nr} text={nr} clickHandler={this.digitClickHandler} />
+                ))}
+            </section>
+        );
     }
 }
 
@@ -138,7 +162,7 @@ class History extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { show: false, history: [] };
+        this.state = {show: false, history: []};
         this.toggleHistory = this.toggleHistory.bind(this);
         this.addHistoryItem = this.addHistoryItem.bind(this);
         this.getHistoryItems = this.getHistoryItems.bind(this);
@@ -154,10 +178,7 @@ class History extends Component {
         if (this.getHistoryItems().filter(i => i === trimmedItem).length === 0) {
             this.setState({
                 ...this.state,
-                history: [
-                    ...this.state.history,
-                    trimmedItem
-                ]
+                history: [...this.state.history, trimmedItem]
             });
         }
     }
@@ -167,7 +188,7 @@ class History extends Component {
     }
 
     toggleHistory() {
-        this.setState({ ...this.state, show: !this.state.show });
+        this.setState({...this.state, show: !this.state.show});
     }
 
     historyItemClickHandler(history) {
@@ -178,13 +199,21 @@ class History extends Component {
     render() {
         return (
             <section className={`history ${this.state.show ? 'visible' : ''}`}>
-                <Button text="+" clickHandler={this.toggleHistory} buttonClass="toggle-close"/>
+                <Button
+                    text="+"
+                    clickHandler={this.toggleHistory}
+                    buttonClass="toggle-close"
+                />
                 {this.getHistoryItems().map((mem, i) => (
-                    <Button key={i} buttonClass="block transparent"
-                            text={mem} clickHandler={this.historyItemClickHandler}/>
+                    <Button
+                        key={i}
+                        buttonClass="block transparent"
+                        text={mem}
+                        clickHandler={this.historyItemClickHandler}
+                    />
                 ))}
             </section>
-        )
+        );
     }
 }
 
